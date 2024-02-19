@@ -21,7 +21,7 @@ const typeDefs = (0, apollo_server_1.gql) `
 
     type Query {
         user(ID: ID!): User!
-        getUsers(number: Int, name: String, sort: String): [User]
+        getUsers(pageNumber:Int, number: Int, name: String, sort: String): [User]
     }
 
     type Mutation {

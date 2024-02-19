@@ -21,14 +21,19 @@ const resolvers = {
             });
         },
         // getUsers is used to get users, search users and sort users
-        getUsers(_, { number, name, sort }) {
+        getUsers(_, { pageNumber, number, name, sort }) {
             return __awaiter(this, void 0, void 0, function* () {
                 let filter = {};
+                // where number is number of data we want in pagination and skip is number of data to skip
+                const skip = (pageNumber - 1) * number;
                 // If name is provided, add it to the filter
                 if (name) {
                     filter.name = { $regex: name, $options: "i" }; // Case-insensitive search
                 }
-                return yield User_1.default.find(filter).sort({ createdAt: sort == "asc" ? 1 : -1 }).limit(number);
+                return yield User_1.default.find(filter)
+                    .sort({ createdAt: sort == "asc" ? 1 : -1 })
+                    .skip(skip)
+                    .limit(number);
             });
         }
     },

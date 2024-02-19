@@ -11,6 +11,7 @@ interface UserData {
 }
 
 interface FilterParameters{
+    pageNumber:number,
     number:number,
     name:string,
     sort:string
@@ -22,15 +23,21 @@ const resolvers = {
             return await User.findById(ID)
         },
         // getUsers is used to get users, search users and sort users
-        async getUsers(_:void,{number,name,sort}:FilterParameters):Promise<User[]>{
+        async getUsers(_:void,{pageNumber,number,name,sort}:FilterParameters):Promise<User[]>{
             let filter:FilterQuery<User> = {}
+
+            // where number is number of data we want in pagination and skip is number of data to skip
+            const skip = (pageNumber - 1) * number;
             
             // If name is provided, add it to the filter
             if (name) {
                 filter.name = { $regex: name, $options: "i" }; // Case-insensitive search
             }
 
-            return await User.find(filter).sort({createdAt:sort=="asc"?1:-1}).limit(number)
+            return await User.find(filter)
+                .sort({createdAt:sort=="asc"?1:-1})
+                .skip(skip)
+                .limit(number)
         }
     },
     Mutation: {
