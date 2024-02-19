@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js"
+    "watch": "tsc --watch --outDir dist",
+    "start": "nodemon dist/index.js"
   },
   "dependencies": {
     "apollo-server": "^3.13.0",

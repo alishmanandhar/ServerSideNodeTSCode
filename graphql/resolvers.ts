@@ -1,22 +1,29 @@
 import User from '../models/User';
 import { FilterQuery } from 'mongoose';
 
-// we need to first define filter object
-interface UserInput {
-    name: {$regix: string; $options: string};
+// Create UserData Interface 
+interface UserData {
+    id: string; // Assuming ObjectId is converted to string
+    name: string;
     age: number;
-    bio: string;
-    createdAt?: Date; // Assuming createdAt is optional
+    bio?: string;
+    createdAt: Date;
+}
+
+interface FilterParameters{
+    number:number,
+    name:string,
+    sort:string
 }
 
 const resolvers = {
     Query: {
-        async user(_:any, {ID}:{ID:string}): Promise<any> {
+        async user(_:void, {ID}:{ID:string}): Promise<User|null> {
             return await User.findById(ID)
         },
         // getUsers is used to get users, search users and sort users
-        async getUsers(_:any,{number,name,sort}:{number:number,name:string,sort:string}):Promise<any>{
-            let filter:FilterQuery<UserInput> = {}
+        async getUsers(_:void,{number,name,sort}:FilterParameters):Promise<User[]>{
+            let filter:FilterQuery<User> = {}
             
             // If name is provided, add it to the filter
             if (name) {
@@ -28,7 +35,7 @@ const resolvers = {
     },
     Mutation: {
         // create new user
-        async createUser(_:any,{userInput: {name,age,bio}}:{userInput:UserInput}):Promise<any>{
+        async createUser(_:void,{userInput: {name,age,bio}}:{userInput:User}):Promise<UserData>{
             const createdUser = new User({
                 name:name,
                 age:age,
@@ -43,12 +50,12 @@ const resolvers = {
             }
         },
         // deleting user
-        async deleteUser(_:any, {ID}:{ID:string}):Promise<any>{
+        async deleteUser(_:void, {ID}:{ID:string}):Promise<number>{
             const wasDeleted = (await User.deleteOne({_id: ID})).deletedCount;
             return wasDeleted;//1 if user has been deleted and, 0 if nothing has been deleted!
         },
         //updating user
-        async editUser(_:any, {ID, userInput: {name, age, bio, createdAt}}:{ID:string, userInput: UserInput}):Promise<any>{
+        async editUser(_:void, {ID, userInput: {name, age, bio, createdAt}}:{ID:string, userInput: User}):Promise<number>{
             const wasEdited = (await User.updateOne({_id: ID},{name:name, age:age, bio:bio, createdAt:createdAt})).modifiedCount;
             return wasEdited; //1 if user has been edited and , 0 if nothing has been edited!
         }

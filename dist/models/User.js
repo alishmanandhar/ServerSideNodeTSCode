@@ -4,13 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-// USER schema and data types
+// 2. creating a schema corresponding to document interface
 const userSchema = new mongoose_1.default.Schema({
-    name: String,
-    age: Number,
-    bio: String,
-    createdAt: Date
+    name: { type: String, required: true },
+    age: { type: Number, required: true },
+    bio: { type: String, required: false },
+    createdAt: { type: Date, default: Date.now }
 });
-// Defining User Model
+// 3. create model
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;
