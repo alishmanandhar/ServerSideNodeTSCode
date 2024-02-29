@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User_1 = __importDefault(require("../models/User"));
+const Icon_1 = __importDefault(require("../models/Icon"));
+const Marker_1 = __importDefault(require("../models/Marker"));
 const resolvers = {
     Query: {
         user(_, { ID }) {
@@ -35,7 +37,42 @@ const resolvers = {
                     .skip(skip)
                     .limit(number);
             });
-        }
+        },
+        getIcons(_) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield Icon_1.default.find();
+            });
+        },
+        icon(_, { ID }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                return yield Icon_1.default.findById(ID);
+            });
+        },
+        getMarkers(_) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const markers = yield Marker_1.default.find();
+                const markerDataWithIcon = markers.map((marker) => __awaiter(this, void 0, void 0, function* () {
+                    const iconData = yield Icon_1.default.findById(marker.iconID);
+                    // Check if iconData is found
+                    if (iconData) {
+                        // If IconData is found, construct the Marker object with IconData
+                        return {
+                            id: marker._id,
+                            lat: marker.lat,
+                            long: marker.long,
+                            rotation: marker.rotation,
+                            iconID: iconData.path,
+                            createdAt: marker.createdAt
+                        };
+                    }
+                    else {
+                        // If IconData is not found, return the marker object without iconPath
+                        return marker;
+                    }
+                }));
+                return yield Promise.all(markerDataWithIcon);
+            });
+        },
     },
     Mutation: {
         // create new user
@@ -64,7 +101,44 @@ const resolvers = {
                 const wasEdited = (yield User_1.default.updateOne({ _id: ID }, { name: name, age: age, bio: bio, createdAt: createdAt })).modifiedCount;
                 return wasEdited; //1 if user has been edited and , 0 if nothing has been edited!
             });
-        }
+        },
+        createIcon(_, { iconInput: { name } }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const createdIcon = new Icon_1.default({
+                    name: name,
+                    path: "xxx"
+                });
+                const res = yield createdIcon.save(); //saving to mongodb
+                return Object.assign({ id: res.id }, res.toObject() // Use toObject to get plain JavaScript object representation
+                );
+            });
+        },
+        editIcon(_, { ID, iconInput: { name } }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const wasEdited = (yield Icon_1.default.updateOne({ _id: ID }, { name: name })).modifiedCount;
+                return wasEdited; //1 if icon has been edited and , 0 if nothing has been edited!
+            });
+        },
+        // deleting icon
+        deleteIcon(_, { ID }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const wasDeleted = (yield Icon_1.default.deleteOne({ _id: ID })).deletedCount;
+                return wasDeleted; //1 if marker has been deleted and, 0 if nothing has been deleted!
+            });
+        },
+        createMarker(_, { markerInput: { lat, long, rotation, iconID } }) {
+            return __awaiter(this, void 0, void 0, function* () {
+                const createdMarker = new Marker_1.default({
+                    lat,
+                    long,
+                    rotation,
+                    iconID
+                });
+                const res = yield createdMarker.save(); //saving to mongodb
+                return Object.assign({ id: res.id }, res.toObject() // Use toObject to get plain JavaScript object representation
+                );
+            });
+        },
     }
 };
 exports.default = resolvers;

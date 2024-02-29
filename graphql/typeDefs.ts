@@ -2,6 +2,7 @@ import {gql} from 'apollo-server';
 
 const typeDefs = gql`
     scalar Date
+    scalar File
     
     type User {
         id: ID!
@@ -18,16 +19,52 @@ const typeDefs = gql`
         createdAt: Date
     }
 
+    type Icon {
+        id: ID!
+        name: String
+        path: String
+        createdAt: Date
+    }
+
+    input IconInput {
+        name: String
+    }
+
+    type Marker {
+        id: ID!
+        lat: Float
+        long: Float
+        rotation: Int
+        iconID: String
+        createdAt: Date
+    }
+
+    input MarkerInput {
+        lat: Float
+        long: Float
+        rotation: Int
+        iconID: String
+    }
+    
     type Query {
         user(ID: ID!): User!
         getUsers(pageNumber:Int, number: Int, name: String, sort: String): [User]
+        getIcons: [Icon]
+        icon(ID: ID!): Icon!
+        getMarkers:[Marker]
     }
 
     type Mutation {
         createUser(userInput: UserInput): User!
         deleteUser(ID: ID!): Boolean
         editUser(ID: ID!, userInput: UserInput): Boolean
+        createIcon(iconInput: IconInput): Icon!
+        editIcon(ID: ID!, iconInput: IconInput): Boolean
+        deleteIcon(ID: ID!): Boolean
+        createMarker(markerInput: MarkerInput): Marker!
     }
+
+    
 `
 
 export default typeDefs;
