@@ -21,10 +21,11 @@ interface IconData {
 
 interface MarkerData {
     id: string; // Assuming ObjectId is converted to string
+    title: string;
     lat: number;
     long: number;
     rotation: number;
-    iconID: string;
+    color: string;
     createdAt: Date;
 }
 
@@ -64,30 +65,7 @@ const resolvers = {
             return await Icon.findById(ID)
         },
         async getMarkers(_:void,):Promise<Marker[]>{
-
-            const markers: Marker[] = await Marker.find();
-
-            const markerDataWithIcon: Promise<Marker>[] = markers.map(async (marker: Marker) => {
-                const iconData: IconData | null = await Icon.findById(marker.iconID);
-                // Check if iconData is found
-                if (iconData) {
-                    // If IconData is found, construct the Marker object with IconData
-                    return {
-                        id:marker._id,
-                        lat: marker.lat,
-                        long: marker.long,
-                        rotation: marker.rotation,
-                        iconID: iconData.path,
-                        createdAt: marker.createdAt
-                    };
-                } else {
-                    // If IconData is not found, return the marker object without iconPath
-                    return marker;
-                }
-            });
-        
-
-            return await Promise.all(markerDataWithIcon);
+            return await Marker.find();
         },
     },
     Mutation: {
@@ -138,12 +116,13 @@ const resolvers = {
             const wasDeleted = (await Icon.deleteOne({_id: ID})).deletedCount;
             return wasDeleted;//1 if marker has been deleted and, 0 if nothing has been deleted!
         },
-        async createMarker(_:void,{markerInput: {lat,long,rotation,iconID}}:{markerInput:MarkerData}):Promise<MarkerData>{
+        async createMarker(_:void,{markerInput: {title,lat,long,rotation,color}}:{markerInput:MarkerData}):Promise<MarkerData>{
             const createdMarker = new Marker({
+                title,
                 lat,
                 long,
                 rotation,
-                iconID
+                color
             });
 
             const res = await createdMarker.save();//saving to mongodb

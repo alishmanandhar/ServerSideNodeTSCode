@@ -50,27 +50,7 @@ const resolvers = {
         },
         getMarkers(_) {
             return __awaiter(this, void 0, void 0, function* () {
-                const markers = yield Marker_1.default.find();
-                const markerDataWithIcon = markers.map((marker) => __awaiter(this, void 0, void 0, function* () {
-                    const iconData = yield Icon_1.default.findById(marker.iconID);
-                    // Check if iconData is found
-                    if (iconData) {
-                        // If IconData is found, construct the Marker object with IconData
-                        return {
-                            id: marker._id,
-                            lat: marker.lat,
-                            long: marker.long,
-                            rotation: marker.rotation,
-                            iconID: iconData.path,
-                            createdAt: marker.createdAt
-                        };
-                    }
-                    else {
-                        // If IconData is not found, return the marker object without iconPath
-                        return marker;
-                    }
-                }));
-                return yield Promise.all(markerDataWithIcon);
+                return yield Marker_1.default.find();
             });
         },
     },
@@ -126,13 +106,14 @@ const resolvers = {
                 return wasDeleted; //1 if marker has been deleted and, 0 if nothing has been deleted!
             });
         },
-        createMarker(_, { markerInput: { lat, long, rotation, iconID } }) {
+        createMarker(_, { markerInput: { title, lat, long, rotation, color } }) {
             return __awaiter(this, void 0, void 0, function* () {
                 const createdMarker = new Marker_1.default({
+                    title,
                     lat,
                     long,
                     rotation,
-                    iconID
+                    color
                 });
                 const res = yield createdMarker.save(); //saving to mongodb
                 return Object.assign({ id: res.id }, res.toObject() // Use toObject to get plain JavaScript object representation

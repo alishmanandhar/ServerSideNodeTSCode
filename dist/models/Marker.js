@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 // 2. creating a schema corresponding to document interface
 const markerSchema = new mongoose_1.default.Schema({
+    title: { type: String, required: true },
     lat: { type: Number, required: true },
     long: { type: Number, required: true },
     rotation: { type: Number, required: true },
-    iconID: { type: String, required: true },
+    color: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });
 // 3. create model

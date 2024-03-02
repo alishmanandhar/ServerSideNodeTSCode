@@ -32,18 +32,20 @@ const typeDefs = gql`
 
     type Marker {
         id: ID!
+        title: String
         lat: Float
         long: Float
         rotation: Int
-        iconID: String
+        color: String
         createdAt: Date
     }
 
     input MarkerInput {
+        title: String
         lat: Float
         long: Float
         rotation: Int
-        iconID: String
+        color: String
     }
     
     type Query {
