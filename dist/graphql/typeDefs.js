@@ -65,6 +65,8 @@ const typeDefs = (0, apollo_server_1.gql) `
         editIcon(ID: ID!, iconInput: IconInput): Boolean
         deleteIcon(ID: ID!): Boolean
         createMarker(markerInput: MarkerInput): Marker!
+        editMarker(ID: ID!, markerInput: MarkerInput): Boolean
+        deleteMarker(ID: ID!): Boolean
     }
 
     

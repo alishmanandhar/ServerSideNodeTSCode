@@ -132,6 +132,14 @@ const resolvers = {
                 ...res.toObject()// Use toObject to get plain JavaScript object representation
             }
         },
+        async editMarker(_:void, {ID, markerInput: {title,lat,long,rotation,color}}:{ID:string, markerInput: Marker}):Promise<number>{
+            const wasEdited = (await Marker.updateOne({_id: ID},{title:title,lat:lat,long:long,rotation:rotation,color:color})).modifiedCount;
+            return wasEdited; //1 if user has been edited and , 0 if nothing has been edited!
+        },
+        async deleteMarker(_:void, {ID}:{ID:string}):Promise<number>{
+            const wasDeleted = (await Marker.deleteOne({_id: ID})).deletedCount;
+            return wasDeleted;//1 if marker has been deleted and, 0 if nothing has been deleted!
+        },
     }
 }
 
