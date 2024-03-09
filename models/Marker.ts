@@ -8,6 +8,7 @@ interface Marker {
     long: number;
     rotation: number;
     color: string;//foreign key from Icon
+    icon: string;//foreign key from Icon
     createdAt: Date;
 }
 
@@ -18,6 +19,7 @@ const markerSchema = new mongoose.Schema<Marker>({
     long: { type: Number, required: true },
     rotation: { type: Number, required: true },
     color: {type: String, required:true},
+    icon: {type: String, required:true},
     createdAt: { type: Date, default: Date.now }
 });
 

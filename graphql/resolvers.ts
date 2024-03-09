@@ -26,6 +26,7 @@ interface MarkerData {
     long: number;
     rotation: number;
     color: string;
+    icon: string;
     createdAt: Date;
 }
 
@@ -116,13 +117,14 @@ const resolvers = {
             const wasDeleted = (await Icon.deleteOne({_id: ID})).deletedCount;
             return wasDeleted;//1 if marker has been deleted and, 0 if nothing has been deleted!
         },
-        async createMarker(_:void,{markerInput: {title,lat,long,rotation,color}}:{markerInput:MarkerData}):Promise<MarkerData>{
+        async createMarker(_:void,{markerInput: {title,lat,long,rotation,color,icon}}:{markerInput:MarkerData}):Promise<MarkerData>{
             const createdMarker = new Marker({
                 title,
                 lat,
                 long,
                 rotation,
-                color
+                color,
+                icon
             });
 
             const res = await createdMarker.save();//saving to mongodb
@@ -132,8 +134,8 @@ const resolvers = {
                 ...res.toObject()// Use toObject to get plain JavaScript object representation
             }
         },
-        async editMarker(_:void, {ID, markerInput: {title,lat,long,rotation,color}}:{ID:string, markerInput: Marker}):Promise<number>{
-            const wasEdited = (await Marker.updateOne({_id: ID},{title:title,lat:lat,long:long,rotation:rotation,color:color})).modifiedCount;
+        async editMarker(_:void, {ID, markerInput: {title,lat,long,rotation,color,icon}}:{ID:string, markerInput: Marker}):Promise<number>{
+            const wasEdited = (await Marker.updateOne({_id: ID},{title:title,lat:lat,long:long,rotation:rotation,color:color,icon:icon})).modifiedCount;
             return wasEdited; //1 if user has been edited and , 0 if nothing has been edited!
         },
         async deleteMarker(_:void, {ID}:{ID:string}):Promise<number>{

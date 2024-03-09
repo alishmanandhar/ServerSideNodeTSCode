@@ -38,6 +38,7 @@ const typeDefs = (0, apollo_server_1.gql) `
         long: Float
         rotation: Int
         color: String
+        icon: String
         createdAt: Date
     }
 
@@ -47,6 +48,7 @@ const typeDefs = (0, apollo_server_1.gql) `
         long: Float
         rotation: Int
         color: String
+        icon: String
     }
     
     type Query {

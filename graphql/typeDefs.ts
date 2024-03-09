@@ -37,6 +37,7 @@ const typeDefs = gql`
         long: Float
         rotation: Int
         color: String
+        icon: String
         createdAt: Date
     }
 
@@ -46,6 +47,7 @@ const typeDefs = gql`
         long: Float
         rotation: Int
         color: String
+        icon: String
     }
     
     type Query {

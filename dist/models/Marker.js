@@ -11,6 +11,7 @@ const markerSchema = new mongoose_1.default.Schema({
     long: { type: Number, required: true },
     rotation: { type: Number, required: true },
     color: { type: String, required: true },
+    icon: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });
 // 3. create model

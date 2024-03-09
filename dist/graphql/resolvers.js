@@ -106,23 +106,24 @@ const resolvers = {
                 return wasDeleted; //1 if marker has been deleted and, 0 if nothing has been deleted!
             });
         },
-        createMarker(_, { markerInput: { title, lat, long, rotation, color } }) {
+        createMarker(_, { markerInput: { title, lat, long, rotation, color, icon } }) {
             return __awaiter(this, void 0, void 0, function* () {
                 const createdMarker = new Marker_1.default({
                     title,
                     lat,
                     long,
                     rotation,
-                    color
+                    color,
+                    icon
                 });
                 const res = yield createdMarker.save(); //saving to mongodb
                 return Object.assign({ id: res.id }, res.toObject() // Use toObject to get plain JavaScript object representation
                 );
             });
         },
-        editMarker(_, { ID, markerInput: { title, lat, long, rotation, color } }) {
+        editMarker(_, { ID, markerInput: { title, lat, long, rotation, color, icon } }) {
             return __awaiter(this, void 0, void 0, function* () {
-                const wasEdited = (yield Marker_1.default.updateOne({ _id: ID }, { title: title, lat: lat, long: long, rotation: rotation, color: color })).modifiedCount;
+                const wasEdited = (yield Marker_1.default.updateOne({ _id: ID }, { title: title, lat: lat, long: long, rotation: rotation, color: color, icon: icon })).modifiedCount;
                 return wasEdited; //1 if user has been edited and , 0 if nothing has been edited!
             });
         },
